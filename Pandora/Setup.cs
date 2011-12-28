@@ -121,8 +121,8 @@ namespace Pandora
                 object tempobject;
                 string resultvalue, resulttext;
 
-                // Display OSK for user to type display name
-                DialogResult dialogResult = this.CF_systemDisplayDialog(CF_Dialogs.OSK, this.pluginLang.ReadField("/APPLANG/SETUP/PASSWORD"), String.Empty, null, out resultvalue, out resulttext, out tempobject, null, true, true, true, true, false, false, 1);
+                // Display OSK for user to type password
+                DialogResult dialogResult = this.CF_systemDisplayDialog(CF_Dialogs.OSK, this.pluginLang.ReadField("/APPLANG/SETUP/PASSWORD"), String.Empty, "PASSWORD", out resultvalue, out resulttext, out tempobject, null, true, true, true, true, false, false, 1);
 
                 if (dialogResult == DialogResult.OK)
                 {

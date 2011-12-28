@@ -1055,7 +1055,7 @@ namespace Pandora
                 CFDialogResults dialogResults = new CFDialogResults();
                 DialogResult dialogResult;
 
-                dialogParams.displaytext = "Enter User Name";
+                dialogParams.displaytext = this.pluginLang.ReadField("/APPLANG/PANDORA/USERNAMEPROMPT");
                 dialogResult = CF_displayDialog(CF_Dialogs.OSK, dialogParams, dialogResults);
 
                 if (dialogResult == DialogResult.Cancel)
@@ -1069,19 +1069,25 @@ namespace Pandora
 
                 guestUsername = dialogResults.resultvalue;
 
-                dialogParams.displaytext = "Enter Password";
-                dialogResult = CF_displayDialog(CF_Dialogs.OSK, dialogParams, dialogResults);
+                //UGH! More SDK inconsistencies... passing "PASSWORD" as param2 here doesn't invoke the password
+                //masking feature, so I have to use the full blown CF_systemDisplayDialog method instead. Lame.
+                //dialogParams.displaytext = this.pluginLang.ReadField("/APPLANG/PANDORA/PASSWORDPROMPT");
+                //dialogParams.param2 = "PASSWORD";
+                //dialogResult = CF_displayDialog(CF_Dialogs.OSK, dialogParams, dialogResults);
+                object tempObject;
+                string resultValue, resultText;
+                dialogResult = this.CF_systemDisplayDialog(CF_Dialogs.OSK, this.pluginLang.ReadField("/APPLANG/PANDORA/PASSWORDPROMPT"), String.Empty, "PASSWORD", out resultValue, out resultText, out tempObject, null, true, true, true, true, false, false, 1);
 
                 if (dialogResult == DialogResult.Cancel)
                     return;
 
-                if (IsNullOrWhiteSpace(dialogResults.resultvalue))
+                if (IsNullOrWhiteSpace(resultValue))
                 {
                     CF_displayMessage("Invalid password.");
                     return;
                 }
 
-                guestPassword = dialogResults.resultvalue;
+                guestPassword = resultValue;
 
                 EndSession();
                 _guest = true;

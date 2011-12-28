@@ -4,8 +4,8 @@
 		<APPNAME>Pandora</APPNAME>
 		<APPLOCATION>[CFAPPDIR]\Plugins\Pandora</APPLOCATION>
 		<APPTYPE>PLUGIN</APPTYPE>
-		<VERSION>1.1.1</VERSION>
-		<REQUIRESRESTART>False</REQUIRESRESTART>
+		<VERSION>1.1.2</VERSION>
+		<REQUIRESRESTART>True</REQUIRESRESTART>
 	</APPDATA>
 	<APPFILES>
 		<FILENAME register="false" overwrite="true" source="Pandora.dll" destination="[CFAPPDIR]\Plugins\Pandora\Pandora.dll" />

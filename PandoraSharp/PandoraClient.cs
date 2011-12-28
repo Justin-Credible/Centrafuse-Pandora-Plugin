@@ -671,13 +671,13 @@ namespace PandoraSharp
 
         #region Helper Methods
 
-        public int GetTimestamp()
+        private int GetTimestamp()
         {
             TimeSpan t = (DateTime.UtcNow - new DateTime(1970, 1, 1));
             return (int)t.TotalSeconds;
         }
 
-        public string GetXml(string fullMethodName, List<object> parameters)
+        private string GetXml(string fullMethodName, List<object> parameters)
         {
             StringBuilder xml = new StringBuilder();
 
@@ -721,7 +721,7 @@ namespace PandoraSharp
             return xml.ToString();
         }
 
-        public Dictionary<string, string> ParseAuthListenerXml(string xml)
+        private Dictionary<string, string> ParseAuthListenerXml(string xml)
         {
             try
             {
@@ -748,7 +748,7 @@ namespace PandoraSharp
             }
         }
 
-        public List<Station> ParseStationXml(string xml)
+        private List<Station> ParseStationXml(string xml)
         {
             try
             {
@@ -778,7 +778,7 @@ namespace PandoraSharp
             }
         }
 
-        public List<Song> ParseSongXml(string xml)
+        private List<Song> ParseSongXml(string xml)
         {
             try
             {
@@ -824,7 +824,7 @@ namespace PandoraSharp
             }
         }
 
-        public List<SearchResult> ParseSearchResultsXml(string xml)
+        private List<SearchResult> ParseSearchResultsXml(string xml)
         {
             try
             {
@@ -870,7 +870,7 @@ namespace PandoraSharp
             }
         }
 
-        public Station ParseCreateStationXml(string xml)
+        private Station ParseCreateStationXml(string xml)
         {
             try
             {
@@ -894,7 +894,7 @@ namespace PandoraSharp
             }
         }
 
-        public string GetFaultString(string xml)
+        private string GetFaultString(string xml)
         {
             if (String.IsNullOrEmpty(xml))
                 return null;
