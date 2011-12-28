@@ -167,9 +167,35 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PreBuildEvent>if $(ConfigurationName) == Debug goto :debug
+if $(ConfigurationName) == Release goto :release
+goto :exit
+
+:debug
+rm -R -f "C:\Program Files (x86)\Centrafuse\Centrafuse Auto\Plugins\Pandora"
+rm -R -f "C:\ProgramData\Centrafuse\Centrafuse Auto\Justin\DLLCache\Pandora_*"
+goto :exit
+
+:release
+rm "$(SolutionDir)\Release Build\*.*" -R -f
+goto :exit
+
+:exit</PreBuildEvent>
+    <PostBuildEvent>if $(ConfigurationName) == Debug goto :debug
+if $(ConfigurationName) == Release goto :release
+goto :exit
+
+:debug
+goto :exit
+
+:release
+cp "C:\Program Files (x86)\Centrafuse\Centrafuse 3.5 SDK BETA 1\CFPlugin\Win32\cfplugin.dll" "$(TargetDir)\cfplugin.dll"
+"C:\Program Files (x86)\Eazfuscator.NET\Eazfuscator.NET.exe" "$(TargetDir)\PandoraSharp.dll" -k "$(SolutionDir)\PandoraSharp\PandoraSharp.pfx"
+"C:\Program Files (x86)\Eazfuscator.NET\Eazfuscator.NET.exe" "$(TargetDir)\Pandora.dll" -k "$(SolutionDir)\Pandora\Pandora.pfx"
+rm "$(TargetDir)\cfplugin.dll"
+start "zip" /D "$(TargetDir)" "zip" -r output.cfapp .
+goto :exit
+
+:exit</PostBuildEvent>
   </PropertyGroup>
 </Project>

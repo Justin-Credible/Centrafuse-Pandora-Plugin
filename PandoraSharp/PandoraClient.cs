@@ -8,7 +8,7 @@ namespace PandoraSharp
 {
     public class PandoraClient
     {
-        private const string BASE_URL = "http://www.pandora.com/radio/xmlrpc/v30?";
+        private const string BASE_URL = "http://www.pandora.com/radio/xmlrpc/v31?";
         private const string BASE_URL_RID = BASE_URL + "rid={0:D7}P&method={1}";
         private const string BASE_URL_LID = BASE_URL + "rid={0:D7}P&lid={1}&method={2}";
 
@@ -152,6 +152,7 @@ namespace PandoraSharp
                 parameters.Add(GetTimestamp());
                 parameters.Add(_authenticationToken);
                 parameters.Add("mi" + musicId);
+                parameters.Add(String.Empty);
 
                 string xml = GetXml("station.createStation", parameters);
                 string encryptedXml = EncryptionHelper.EncryptString(xml);
