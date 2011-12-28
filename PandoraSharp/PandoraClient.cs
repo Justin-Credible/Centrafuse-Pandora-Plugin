@@ -12,15 +12,17 @@ namespace PandoraSharp
         private const string BASE_URL_RID = BASE_URL + "rid={0:D7}P&method={1}";
         private const string BASE_URL_LID = BASE_URL + "rid={0:D7}P&lid={1}&method={2}";
 
-        private int _rid;
-        private string _lid;
+        private string _rid; //Route ID
+        private string _lid; //Listener ID
         private string _authenticationToken;
         private string _username;
         private string _password;
+        private int _time;
 
         public PandoraClient()
         {
-            _rid = GetTimestamp() % 10000000;
+            //_rid = GetTimestamp() % 10000000;
+            _rid = (DateTime.UtcNow.ToFileTime() % 10000000).ToString("0000000") + "P";
         }
 
         #region Events
@@ -261,6 +263,32 @@ namespace PandoraSharp
             {
                 if (ExceptionReceived != null)
                     ExceptionReceived(this, new EventArgs<Exception>(e.Error));
+
+                return;
+            }
+
+            try
+            {
+                String response = System.Text.Encoding.ASCII.GetString(e.Result);
+
+                string faultString = GetFaultString(response);
+
+                if (!String.IsNullOrEmpty(faultString))
+                {
+                    if (ExceptionReceived != null)
+                        ExceptionReceived(this, new EventArgs<Exception>(new Exception(faultString)));
+
+                    return;
+                }
+
+                Dictionary<string, string> dict = ParseSyncXml(response);
+
+                _time = int.Parse(EncryptionHelper.DecryptUrlHex(dict["time"]).Substring(4, 10));
+            }
+            catch (Exception exception)
+            {
+                if (ExceptionReceived != null)
+                    ExceptionReceived(this, new EventArgs<Exception>(exception));
 
                 return;
             }
@@ -679,8 +707,9 @@ namespace PandoraSharp
 
         private int GetTimestamp()
         {
-            TimeSpan t = (DateTime.UtcNow - new DateTime(1970, 1, 1) + new TimeSpan(180, 0, 0, 0, 0));
-            return (int)t.TotalSeconds;
+            //TimeSpan t = (DateTime.UtcNow - new DateTime(1970, 1, 1) + new TimeSpan(180, 0, 0, 0, 0));
+            //return (int)t.TotalSeconds;
+            return _time * 10000000;
         }
 
         private string GetXml(string fullMethodName, List<object> parameters)
@@ -725,6 +754,27 @@ namespace PandoraSharp
             xml.Append("</methodCall>");
 
             return xml.ToString();
+        }
+
+        private Dictionary<string, string> ParseSyncXml(string xml)
+        {
+            try
+            {
+                Dictionary<string, string> retObj = new Dictionary<string, string>();
+
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(xml);
+
+                XmlNode valueNode = xmlDoc.SelectSingleNode("/methodResponse/params/param/value");
+
+                retObj.Add("time", valueNode.InnerText);
+
+                return retObj;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Unable to parse Sync XML.", exception);
+            }
         }
 
         private Dictionary<string, string> ParseAuthListenerXml(string xml)
