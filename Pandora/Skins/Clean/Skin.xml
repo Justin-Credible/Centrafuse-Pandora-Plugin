@@ -1,0 +1,80 @@
+<SKIN id="Clean" width="800" height="480">
+  <FONTCLASSES>
+    <FONTCLASS id="MyButton" font="Century Gothic" color="#FFFFFF" color2="#003366" size="20" style="Bold" align="Center" wrap="False" xoffset="0" yoffset="-2" />
+  </FONTCLASSES>
+  <IMAGES>
+    <IMAGE id="Pandora_Regular" path="Pandora_Regular.png" />
+    <IMAGE id="Pandora_Active" path="Pandora_Active.png" />
+  </IMAGES>
+  <SECTIONS>
+    <SECTION id="Pandora" effect="ToApp" bounds="0;88;800;304" off="Pandora_Regular" down="Pandora_Active">
+      <CONTROLS>
+        <CONTROL type="Label" id="StationName" bounds="142;24;406;31" fontclass="MediaManagerLabel" fontstyle="size:26;style:bold;case:none" />
+        <CONTROL type="Label" id="CurrentSongInfo" bounds="142;57;406;31" fontclass="MediaManagerLabel" fontstyle="size:20" />
+        <CONTROL type="PictureBox" id="GuestActive" bounds="615;237;47;45" image="cache:Icon_Guest_Active.png" />
+        <CONTROL type="PictureBox" id="ThumbsUpActive" bounds="43;17;47;48" image="" />
+        <CONTROL type="PictureBox" id="AlbumArtPicture" bounds="568;11;137;138" image="" />
+        <CONTROL type="Button" id="PageUp" bounds="709;8;81;144" effect="" tabindex="0" enabled="true" />
+        <CONTROL type="Button" id="PageDown" bounds="709;153;81;144" effect="" tabindex="0" enabled="true" />
+        <CONTROL type="Button" id="ThumbsUp" bounds="9;7;114;67" tabindex="1" enabled="true" cmlaction="" />
+        <CONTROL type="Button" id="ThumbsDown" bounds="9;74;114;66" tabindex="2" enabled="true" cmlaction="" />
+        <CONTROL type="Button" id="PlayStation" bounds="9;150;114;68" tabindex="3" enabled="true" cmlaction="" />
+        <CONTROL type="Button" id="CreateStation" bounds="565;152;142;71" tabindex="4" enabled="true" cmlaction="" />
+        <CONTROL type="Button" id="RefreshStations" bounds="9;228;114;69" tabindex="5" enabled="true" cmlaction="" />
+        <CONTROL type="Button" id="GuestLogin" bounds="565;224;143;72" cmlaction="" />
+        <CONTROL type="AdvancedList" id="StationsList" bounds="134;93;429;202">
+          <LAYOUT>
+            <TEMPLATES>
+              <TEMPLATE id="default" selectable="true" layout="Stacked" baseSize="575;340" scrollbarStyleId="Scrollbar">
+                <ITEMGROUP type="Default" size="575;68">
+                  <!-- When defining items, keep the following in mind:
+                     1) The "id" is not important unless you need to call it from code, though it helps to name it the same as the DataTable column
+                     2) The two types used here are Text and Image, which should be self-explanatory.
+                     3) Position is relative to the top left of the screen
+                     4) The size are in relative coordinates, that is, they describe the size of the bounding rectangle for the item, NOT the lower-right corner
+                     5) dataSource, in it's simplest form, is simply the column name used to populate the item. For example, if it is a text item
+                        then the text in that DataTable row from that column will be shown. If it is an image, that value will be used as the name of the file
+                        for the image.
+                     6) A more complex notation is to place the DataTable column name outside of curly braces "{ }", then use the [value] syntax
+                        to substitute the value in that column. A common usage is to use a column value to turn on or off an image as we do
+                        here: the syntax for that is ColumnName{filename_[value].png}, where ColumnName's value might be something like "1"
+                        or "0". That means that the tag will look for a file named "filename_1.png", or "filename_0.png". If the file doesn't
+                        exist, it's going to be a blank image. 
+                     7) Setting a linkId value will cause clicking on that image to fire the LinkedItemClick event with that attribute's value
+                        passed to the handler 
+                     8) If the dataSource is of the form "cache:filename", that will cache the filename in memory. It is used for static images
+                        that will not change -->
+                  <ITEM id="Title" type="Text" position="7;27" size="345;21" dataSource="StationName" styleId="Title" />
+                  <ITEM id="Favorite" type="Image" position="359;22" size="29;29" dataSource="Favorite{Icon_Favorite_[value].png}" styleId="Image.Fit" linkId="Favorite" />
+                  <ITEM id="Delete" type="Image" position="388;22" size="29;29" dataSource="cache:Icon_Delete.png" styleId="Image.Fit" linkId="Delete" />
+                  <ITEM id="Line" type="Image" position="0;67" size="418;1" dataSource="cache:Separator.png" styleId="Image.Fit" />
+                </ITEMGROUP>
+                <ITEMGROUP type="Selected" size="575;68">
+                  <ITEM id="Background" type="Image" position="0;0" size="418;67" dataSource="cache:SelectionBar.png" styleId="Image.Fit" />
+                  <ITEM id="Title" type="Text" position="7;27" size="345;21" dataSource="StationName" styleId="Title.Selected" />
+                  <ITEM id="Favorite" type="Image" position="359;22" size="29;29" dataSource="Favorite{Icon_Favorite_[value].png}" styleId="Image.Fit" linkId="Favorite" />
+                  <ITEM id="Delete" type="Image" position="388;22" size="29;29" dataSource="cache:Icon_Delete.png" styleId="Image.Fit" linkId="Delete" />
+                  <ITEM id="Line" type="Image" position="0;67" size="418;1" dataSource="cache:Separator.png" styleId="Image.Fit" />
+                </ITEMGROUP>
+              </TEMPLATE>
+            </TEMPLATES>
+            <STYLES>
+              <STYLE id="Title" color="#ffffff" hAlignment="Left" vAlignment="Middle" leftIndent="0" rightIndent="0" fontId="1" trimming="true" case="Title" />
+              <STYLE id="Title.Selected" color="#000000" hAlignment="Left" vAlignment="Middle" leftIndent="0" rightIndent="0" fontId="1" trimming="true" case="Title" />
+              <STYLE id="Image.Fit" hAlignment="Fit" vAlignment="Fit" />
+              <STYLE id="Scrollbar" color="#FFFFFF" hAlignment="Right" vAlignment="Bottom" leftIndent="0" rightIndent="0" option="size:10;radius:2;minsize:32" />
+            </STYLES>
+            <FONTS include=".\Skins\Clean\listview\CommonFonts.xml">
+              <FONT id="2.6" name="Utsaah" size="16" style="Regular" />
+              <FONT id="4.6" name="Utsaah" size="17" style="Bold" />
+              <FONT id="3.3" name="Utsaah" size="18" style="Regular" />
+              <FONT id="4.3" name="Utsaah" size="17" style="Regular" />
+              <FONT id="2.3" name="Utsaah" size="20" style="Bold" />
+              <FONT id="4" name="Utsaah" size="19" style="Regular" />
+            </FONTS>
+          </LAYOUT>
+        </CONTROL>
+      </CONTROLS>
+    </SECTION>
+  </SECTIONS>
+</SKIN>

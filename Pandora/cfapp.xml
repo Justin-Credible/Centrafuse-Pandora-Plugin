@@ -1,0 +1,27 @@
+<CFAPP>
+	<APPDATA>
+		<APPID>0</APPID>
+		<APPNAME>Pandora</APPNAME>
+		<APPLOCATION>[CFAPPDIR]\Plugins\Pandora</APPLOCATION>
+		<APPTYPE>PLUGIN</APPTYPE>
+		<VERSION>1.0.0</VERSION>
+		<REQUIRESRESTART>False</REQUIRESRESTART>
+	</APPDATA>
+	<APPFILES>
+		<FILENAME register="false" overwrite="true" source="Pandora.dll" destination="[CFAPPDIR]\Plugins\Pandora\Pandora.dll" />
+		<FILENAME register="false" overwrite="true" source="PandoraSharp.dll" destination="[CFAPPDIR]\Plugins\Pandora\PandoraSharp.dll" />
+		<FILENAME register="false" overwrite="true" source="Languages\English.xml" destination="[CFAPPDIR]\Plugins\Pandora\Languages\English.xml" />
+		<FILENAME register="false" overwrite="true" source="Skins\Clean\Skin.xml" destination="[CFAPPDIR]\Plugins\Pandora\Skins\Clean\Skin.xml" />
+		<FILENAME register="false" overwrite="true" source="Skins\Clean\icon.png" destination="[CFAPPDIR]\Plugins\Pandora\Skins\Clean\icon.png" />
+		<FILENAME register="false" overwrite="true" source="Skins\Clean\Pandora_Active.png" destination="[CFAPPDIR]\Plugins\Pandora\Skins\Clean\Pandora_Active.png" />
+		<FILENAME register="false" overwrite="true" source="Skins\Clean\Pandora_Regular.png" destination="[CFAPPDIR]\Plugins\Pandora\Skins\Clean\Pandora_Regular.png" />
+		<FILENAME register="false" overwrite="true" source="Skins\Clean\SelectionBar.png" destination="[CFAPPDIR]\Plugins\Pandora\Skins\Clean\SelectionBar.png" />
+		<FILENAME register="false" overwrite="true" source="Skins\Clean\Separator.png" destination="[CFAPPDIR]\Plugins\Pandora\Skins\Clean\Separator.png" />
+		<FILENAME register="false" overwrite="true" source="Skins\Clean\Icon_Guest_Active.png" destination="[CFAPPDIR]\Plugins\Pandora\Skins\Clean\Icon_Guest_Active.png" />
+		<FILENAME register="false" overwrite="true" source="Skins\Clean\Icon_Like_Active.png" destination="[CFAPPDIR]\Plugins\Pandora\Skins\Clean\Icon_Like_Active.png" />
+		<FILENAME register="false" overwrite="true" source="Skins\Clean\Icon_Favorite_False.png" destination="[CFAPPDIR]\Plugins\Pandora\Skins\Clean\Icon_Favorite_False.png" />
+		<FILENAME register="false" overwrite="true" source="Skins\Clean\Icon_Favorite_True.png" destination="[CFAPPDIR]\Plugins\Pandora\Skins\Clean\Icon_Favorite_True.png" />
+		<FILENAME register="false" overwrite="true" source="Skins\Clean\Icon_Delete.png" destination="[CFAPPDIR]\Plugins\Pandora\Skins\Clean\Icon_Delete.png" />
+		<FILENAME register="false" overwrite="true" source="Skins\Clean\DefaultAlbumArt.png" destination="[CFAPPDIR]\Plugins\Pandora\Skins\Clean\DefaultAlbumArt.png" />
+	</APPFILES>
+</CFAPP>
