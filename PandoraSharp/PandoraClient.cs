@@ -281,6 +281,11 @@ namespace PandoraSharp
                 parameters.Add(GetTimestamp());
                 parameters.Add(_username);
                 parameters.Add(_password);
+                parameters.Add("html5tuner"); //??
+                parameters.Add(String.Empty); //??
+                parameters.Add(String.Empty); //??
+                parameters.Add("HTML5"); //??
+                parameters.Add(true); //??
 
                 string xml = GetXml("listener.authenticateListener", parameters);
                 string encryptedXml = EncryptionHelper.EncryptString(xml);
@@ -674,7 +679,7 @@ namespace PandoraSharp
 
         private int GetTimestamp()
         {
-            TimeSpan t = (DateTime.UtcNow - new DateTime(1970, 1, 1));
+            TimeSpan t = (DateTime.UtcNow - new DateTime(1970, 1, 1) + new TimeSpan(180, 0, 0, 0, 0));
             return (int)t.TotalSeconds;
         }
 
