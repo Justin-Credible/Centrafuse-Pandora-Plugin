@@ -75,10 +75,13 @@ namespace Pandora
                 ButtonText[CFSetupButton.Four] = this.pluginLang.ReadField("/APPLANG/SETUP/CLEARFAVORITES");
                 ButtonValue[CFSetupButton.Four] = this.pluginLang.ReadField("/APPLANG/SETUP/CLEARFAVORITESPROMPT");
 
-                ButtonHandler[CFSetupButton.Five] = new CFSetupHandler(SetLogEvents);
-                ButtonText[CFSetupButton.Five] = this.pluginLang.ReadField("/APPLANG/SETUP/LOGEVENTS");
-                ButtonValue[CFSetupButton.Five] = this.pluginConfig.ReadField("/APPCONFIG/LOGEVENTS");
+                ButtonHandler[CFSetupButton.Five] = new CFSetupHandler(SetClearCache);
+                ButtonText[CFSetupButton.Five] = this.pluginLang.ReadField("/APPLANG/SETUP/CLEARCACHE");
+                ButtonValue[CFSetupButton.Five] = this.pluginConfig.ReadField("/APPCONFIG/CLEARCACHE");
 
+                ButtonHandler[CFSetupButton.Six] = new CFSetupHandler(SetLogEvents);
+                ButtonText[CFSetupButton.Six] = this.pluginLang.ReadField("/APPLANG/SETUP/LOGEVENTS");
+                ButtonValue[CFSetupButton.Six] = this.pluginConfig.ReadField("/APPCONFIG/LOGEVENTS");
             }
             catch (Exception errmsg) { CFTools.writeError(errmsg.Message, errmsg.StackTrace); }
         }
@@ -135,14 +138,6 @@ namespace Pandora
             catch (Exception errmsg) { CFTools.writeError(errmsg.Message, errmsg.StackTrace); }
         }
 
-        private void SetLogEvents(ref object value)
-        {
-            // save user value, note this does not save to file yet, as this should only be done when user confirms settings
-            // being overwritten when they click the "Save" button.  Saving is done internally by the CFSetup instance if
-            // pluginConfig and pluginLang were properly set before callin CF_initSetup().
-            this.pluginConfig.WriteField("/APPCONFIG/LOGEVENTS", value.ToString());
-        }
-
         private void SetAudioFormat(ref object value)
         {
             try
@@ -193,6 +188,23 @@ namespace Pandora
             }
             catch (Exception errmsg) { CFTools.writeError(errmsg.Message, errmsg.StackTrace); }
         }
+
+        private void SetClearCache(ref object value)
+        {
+            // save user value, note this does not save to file yet, as this should only be done when user confirms settings
+            // being overwritten when they click the "Save" button.  Saving is done internally by the CFSetup instance if
+            // pluginConfig and pluginLang were properly set before callin CF_initSetup().
+            this.pluginConfig.WriteField("/APPCONFIG/CLEARCACHE", value.ToString());
+        }
+
+        private void SetLogEvents(ref object value)
+        {
+            // save user value, note this does not save to file yet, as this should only be done when user confirms settings
+            // being overwritten when they click the "Save" button.  Saving is done internally by the CFSetup instance if
+            // pluginConfig and pluginLang were properly set before callin CF_initSetup().
+            this.pluginConfig.WriteField("/APPCONFIG/LOGEVENTS", value.ToString());
+        }
+
 
         #endregion
 

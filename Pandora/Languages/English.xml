@@ -7,12 +7,13 @@
     <TITLE>Pandora</TITLE>
     <USERNAME>User Name</USERNAME>
     <PASSWORD>Password </PASSWORD>
-    <LOGEVENTS>Log Events</LOGEVENTS>
     <AUDIOFORMAT>Audio Format</AUDIOFORMAT>
     <CLEARFAVORITES>Clear Favorites</CLEARFAVORITES>
     <CLEARFAVORITESPROMPT>Click here to clear favorite stations</CLEARFAVORITESPROMPT>
     <MOBILEQUALITY>Mobile Quality (64 kbps AAC Plus)</MOBILEQUALITY>
     <REGULARQUALITY>Regular Quality (128 kbps MP3)</REGULARQUALITY>
     <HIGHQUALITY>High Quality (192 kbps MP3)</HIGHQUALITY>
+    <CLEARCACHE>Auto Clear Album Art Cache</CLEARCACHE>
+    <LOGEVENTS>Log Events</LOGEVENTS>
   </SETUP>
 </APPLANG>

@@ -42,6 +42,7 @@ namespace Pandora
         private string _userName = null;
         private string _password = null;
         private bool _logEvents = false;
+        private bool _clearCache = false;
         private bool _subscriber = false;
         private AudioFormats _audioFormat = AudioFormats.MP3;
 
@@ -80,14 +81,20 @@ namespace Pandora
 
                 WriteLog("Pandora Plugin Startup");
 
+                string tempDir = System.IO.Path.GetTempPath();
+                WriteLog("Copying UI Images to Temp Directory: " + tempDir);
+                File.Copy(_pluginPath + "\\Skins\\Clean\\DefaultAlbumArt.png", tempDir + "CF_PandoraPlugin_DefaultAlbumArt.png", true);
+                File.Copy(_pluginPath + "\\Skins\\Clean\\Icon_Guest_Active.png", tempDir + "CF_PandoraPlugin_Icon_Guest_Active.png", true);
+                File.Copy(_pluginPath + "\\Skins\\Clean\\Icon_Like_Active.png", tempDir + "CF_PandoraPlugin_Icon_Like_Active.png", true);
+
+                WriteLog("Loading UI Images");
+                _defaultAlbumArt = Image.FromFile(tempDir + "CF_PandoraPlugin_DefaultAlbumArt.png");
+                _activeGuestIcon = Image.FromFile(tempDir + "CF_PandoraPlugin_Icon_Guest_Active.png");
+                _activeLikeIcon = Image.FromFile(tempDir + "CF_PandoraPlugin_Icon_Like_Active.png");
+
                 WriteLog("Setting default UI values");
-                _defaultAlbumArt = Image.FromFile(_pluginPath + "\\Skins\\Clean\\DefaultAlbumArt.png");
                 CF_setPictureImage("AlbumArtPicture", _defaultAlbumArt);
-
-                _activeGuestIcon = Image.FromFile(_pluginPath + "\\Skins\\Clean\\Icon_Guest_Active.png");
                 CF_setPictureImage("GuestActive", null);
-
-                _activeLikeIcon = Image.FromFile(_pluginPath + "\\Skins\\Clean\\Icon_Like_Active.png");
                 CF_setPictureImage("ThumbsUpActive", null);
 
                 WriteLog("Initializing Plugin Variables");
@@ -99,7 +106,24 @@ namespace Pandora
                 _albumArtWebClient = new System.Net.WebClient();
                 _albumArtWebClient.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(_albumArtWebClient_DownloadFileCompleted);
 
-                if (!Directory.Exists(CFTools.AppDataPath + "\\Plugins\\Pandora\\AlbumArt"))
+                if (Directory.Exists(CFTools.AppDataPath + "\\Plugins\\Pandora\\AlbumArt"))
+                {
+                    if (_clearCache)
+                    {
+                        WriteLog("Clearing Album Art Cache Directory");
+                        try
+                        {
+                            DirectoryInfo directoryInfo = new DirectoryInfo(CFTools.AppDataPath + "\\Plugins\\Pandora\\AlbumArt");
+                            foreach (FileInfo fileInfo in directoryInfo.GetFiles())
+                                fileInfo.Delete();
+                        }
+                        catch (Exception exception)
+                        {
+                            WriteLog("Unable to clear album art cache directory", exception);
+                        }
+                    }
+                }
+                else
                 {
                     WriteLog("Creating Album Art Cache Directory");
                     Directory.CreateDirectory(CFTools.AppDataPath + "\\Plugins\\Pandora\\AlbumArt");
@@ -126,7 +150,11 @@ namespace Pandora
 
                 InitPandoraClient();
 			}
-			catch(Exception errmsg) { CFTools.writeError(errmsg.ToString()); }
+			catch(Exception errmsg)
+            {
+                CF_displayMessage("Error initializing Pandora plugin: " + errmsg);
+                CFTools.writeError(errmsg.ToString());
+            }
 		}
 
         void _debug_Tick(object sender, EventArgs e)
@@ -733,6 +761,10 @@ namespace Pandora
 
             if (!String.IsNullOrEmpty(favoritesString))
                 _favorites.AddRange(favoritesString.Split(';'));
+
+
+            string clearCache = this.pluginConfig.ReadField("/APPCONFIG/CLEARCACHE");
+            Boolean.TryParse(clearCache, out _clearCache);
         }
 
         private bool InitPandoraClient()
@@ -744,9 +776,12 @@ namespace Pandora
 
             if (IsNullOrWhiteSpace(_userName) || IsNullOrWhiteSpace(_password))
             {
-                string message = "User name and/or password are not configured.";
-                WriteLog(message);
-                CF_displayMessage(String.Format("{0} Plugin: {1}", _pluginName, message));
+                if (_hasControl)
+                {
+                    string message = "User name and/or password are not configured.";
+                    WriteLog(message);
+                    CF_displayMessage(String.Format("{0} Plugin: {1}", _pluginName, message));
+                }
                 return false;
             }
 
