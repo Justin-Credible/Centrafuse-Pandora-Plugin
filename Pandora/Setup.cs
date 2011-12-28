@@ -2,6 +2,7 @@ using System;
 using System.Windows.Forms;
 using System.Xml;
 using System.Web;
+using System.IO;
 using centrafuse.Plugins;
 using PandoraSharp;
 
@@ -150,12 +151,20 @@ namespace Pandora
                 audioFormatItems[1] = new CFControls.CFListViewItem(GetAudioFormatDisplay(AudioFormats.MP3), AudioFormats.MP3.ToString(), 0, false, (object)AudioFormats.MP3);
                 audioFormatItems[2] = new CFControls.CFListViewItem(GetAudioFormatDisplay(AudioFormats.MP3_HIFI), AudioFormats.MP3_HIFI.ToString(), 0, false, (object)AudioFormats.MP3_HIFI);
 
-                // Display OSK for user to type display name
-                DialogResult dialogResult = this.CF_systemDisplayDialog(CF_Dialogs.FileBrowser, this.pluginLang.ReadField("/APPLANG/SETUP/AUDIOFORMAT"), null, null, out resultvalue, out resulttext, out resultObject, audioFormatItems, false, true, false, false, false, false, 1);
+                AudioFormats audioFormat = AudioFormats.MP3;
+
+                try
+                {
+                    audioFormat = (AudioFormats)Enum.Parse(typeof(AudioFormats), this.pluginConfig.ReadField("/APPCONFIG/AUDIOFORMAT"));
+                }
+                catch { }
+
+                //TODO: Pass in current value so the list shows the correct item selected initially, this doesn't seem to work as-is
+                DialogResult dialogResult = this.CF_systemDisplayDialog(CF_Dialogs.FileBrowser, this.pluginLang.ReadField("/APPLANG/SETUP/AUDIOFORMAT"), null, audioFormat.ToString(), out resultvalue, out resulttext, out resultObject, audioFormatItems, false, true, false, false, false, false, 1);
 
                 if (dialogResult == DialogResult.OK)
                 {
-                    AudioFormats audioFormat = (AudioFormats)resultObject;
+                    audioFormat = (AudioFormats)resultObject;
 
                     // save user value, note this does not save to file yet, as this should only be done when user confirms settings
                     // being overwritten when they click the "Save" button.  Saving is done internally by the CFSetup instance if
@@ -169,6 +178,17 @@ namespace Pandora
                     {
                         CFDialogParams dialogParams = new CFDialogParams("High quality audio is only available to Pandora One subscribers. If you are not a subscriber regular quality will be used instead.");
                         this.CF_displayDialog(CF_Dialogs.OkBox, dialogParams);
+                    }
+                    else if (audioFormat == AudioFormats.AAC_PLUS)
+                    {
+                        System.Reflection.Assembly assembly = System.Reflection.Assembly.GetEntryAssembly();
+                        string bassAacAssemblyPath = System.IO.Path.GetDirectoryName(assembly.Location) + "\\bass_aac.dll";
+
+                        if (!File.Exists(bassAacAssemblyPath))
+                        {
+                            CFDialogParams dialogParams = new CFDialogParams("Centrafuse does not natively support the AAC audio format which is used by the mobile quality setting. To enable mobile quality playback you need to install the bass_aac.dll audio extension which can be downloaded from www.un4seen.com. Place the DLL in the Centrafuse directory. If you do not install this library you will not be able to listen to Pandora using the mobile quality setting.");
+                            this.CF_displayDialog(CF_Dialogs.OkBoxBig, dialogParams);
+                        }
                     }
                 }
             }

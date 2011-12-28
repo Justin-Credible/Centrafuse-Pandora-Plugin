@@ -83,9 +83,15 @@ namespace Pandora
 
                 string tempDir = System.IO.Path.GetTempPath();
                 WriteLog("Copying UI Images to Temp Directory: " + tempDir);
-                File.Copy(_pluginPath + "\\Skins\\Clean\\DefaultAlbumArt.png", tempDir + "CF_PandoraPlugin_DefaultAlbumArt.png", true);
-                File.Copy(_pluginPath + "\\Skins\\Clean\\Icon_Guest_Active.png", tempDir + "CF_PandoraPlugin_Icon_Guest_Active.png", true);
-                File.Copy(_pluginPath + "\\Skins\\Clean\\Icon_Like_Active.png", tempDir + "CF_PandoraPlugin_Icon_Like_Active.png", true);
+
+                if (!File.Exists(tempDir + "CF_PandoraPlugin_DefaultAlbumArt.png"))
+                    File.Copy(_pluginPath + "\\Skins\\Clean\\DefaultAlbumArt.png", tempDir + "CF_PandoraPlugin_DefaultAlbumArt.png", true);
+
+                if (!File.Exists(tempDir + "CF_PandoraPlugin_Icon_Guest_Active.png"))
+                    File.Copy(_pluginPath + "\\Skins\\Clean\\Icon_Guest_Active.png", tempDir + "CF_PandoraPlugin_Icon_Guest_Active.png", true);
+
+                if (!File.Exists(tempDir + "CF_PandoraPlugin_Icon_Like_Active.png"))
+                    File.Copy(_pluginPath + "\\Skins\\Clean\\Icon_Like_Active.png", tempDir + "CF_PandoraPlugin_Icon_Like_Active.png", true);
 
                 WriteLog("Loading UI Images");
                 _defaultAlbumArt = Image.FromFile(tempDir + "CF_PandoraPlugin_DefaultAlbumArt.png");
@@ -758,9 +764,23 @@ namespace Pandora
             if (!String.IsNullOrEmpty(favoritesString))
                 _favorites.AddRange(favoritesString.Split(';'));
 
+            try
+            {
+                _audioFormat = (AudioFormats)Enum.Parse(typeof(AudioFormats), this.pluginConfig.ReadField("/APPCONFIG/AUDIOFORMAT"));
+            }
+            catch (Exception ex)
+            {
+                WriteLog("Unable to parse AudioFormat.", ex);
+            }
 
-            string clearCache = this.pluginConfig.ReadField("/APPCONFIG/CLEARCACHE");
-            Boolean.TryParse(clearCache, out _clearCache);
+            try
+            {
+                _clearCache = Boolean.Parse(this.pluginConfig.ReadField("/APPCONFIG/CLEARCACHE"));
+            }
+            catch (Exception ex)
+            {
+                WriteLog("Unable to parse ClearCache.", ex);
+            }
         }
 
         private bool InitPandoraClient()
