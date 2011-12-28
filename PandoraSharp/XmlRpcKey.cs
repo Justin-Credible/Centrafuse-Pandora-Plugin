@@ -4,6 +4,7 @@ using System.Text;
 
 namespace PandoraSharp
 {
+    //Encryption key for XmlRpc; corresponds to crypt_key_output.h in the pianobar library
     internal static class XmlRpcKey
     {
         public static readonly uint N = 16;
