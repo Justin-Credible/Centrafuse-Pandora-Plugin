@@ -157,12 +157,6 @@ namespace Pandora
             }
 		}
 
-        void _debug_Tick(object sender, EventArgs e)
-        {
-            Console.WriteLine("hai " + DateTime.Now.ToShortTimeString());
-            WriteLog("hai " + DateTime.Now.ToShortTimeString());
-        }
-
         /// <summary>
         /// This is called to setup the skin.  This will usually be called in CF_pluginInit.  It will 
         /// also called by the system when the resolution has been changed.
@@ -306,6 +300,7 @@ namespace Pandora
             {
                 WriteLog("Pausing audio stream");
                 CF_controlAudioStream(_audioStream, CF_AudioAction.Pause);
+                CF_setPlayPauseButton(true, _zone);
             }
         }
 
@@ -322,6 +317,7 @@ namespace Pandora
             {
                 WriteLog("Resuming audio stream");
                 CF_controlAudioStream(_audioStream, CF_AudioAction.Play);
+                CF_setPlayPauseButton(false, _zone);
                 _timer.Start();
             }
         }
@@ -417,11 +413,11 @@ namespace Pandora
             {
                 case CF_AudioStatus.Paused:
                     CF_controlAudioStream(_audioStream, CF_AudioAction.Play);
-                    CF_setPlayPauseButton(true, _zone);
+                    CF_setPlayPauseButton(false, _zone);
                     break;
                 case CF_AudioStatus.Playing:
                     CF_controlAudioStream(_audioStream, CF_AudioAction.Pause);
-                    CF_setPlayPauseButton(false, _zone);
+                    CF_setPlayPauseButton(true, _zone);
                     break;
                 case CF_AudioStatus.Stopped:
                     PlayNextSong();
@@ -842,6 +838,7 @@ namespace Pandora
 
             CF_controlAudioStream(_audioStream, CF_AudioAction.Stop);
             CF_controlAudioStream(_audioStream, CF_AudioAction.Free);
+            CF_setPlayPauseButton(true, _zone);
 
             _currentStationId = null;
             _songs.Clear();
@@ -872,6 +869,7 @@ namespace Pandora
 
                 CF_controlAudioStream(_audioStream, CF_AudioAction.Stop);
                 CF_controlAudioStream(_audioStream, CF_AudioAction.Free);
+                CF_setPlayPauseButton(true, _zone);
 
                 _currentSong = _songs.Dequeue();
 
@@ -891,6 +889,7 @@ namespace Pandora
                     //HACK - The audio complete callback handler apparently isn't implemented
                     //so we pass null and use a timer to check manually... so lame!
                     _audioStream = CF_playAudioStream(audioUrl, null);
+                    CF_setPlayPauseButton(false, _zone);
                 }
                 catch (Exception ex)
                 {
@@ -1272,6 +1271,7 @@ namespace Pandora
 
             _timer.Stop();
             CF_controlAudioStream(_audioStream, CF_AudioAction.Stop);
+            CF_setPlayPauseButton(true, _zone);
             _lastAuthenticated = DateTime.MinValue;
             _currentStationId = null;
             _currentSong = null;
